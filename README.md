@@ -16,7 +16,7 @@ Download from Releases: https://github.com/atensecurity/thoth/releases/latest
 
 ## Documentation
 
-https://docs.atensecurity.com/releases
+https://docs.atensecurity.com
 
 ## Support
 
