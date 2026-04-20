@@ -5,6 +5,39 @@ REPO="atensecurity/thoth"
 INSTALL_DIR="${THOTH_INSTALL_DIR:-/usr/local/bin}"
 VERSION="${THOTH_VERSION:-latest}"
 
+bootstrap_thoth_home() {
+  if [ -z "${HOME:-}" ]; then
+    echo "warning: HOME is not set; skipping ~/.thoth bootstrap" >&2
+    return 0
+  fi
+
+  THOTH_HOME_DIR="${THOTH_HOME_DIR:-${HOME}/.thoth}"
+  INTENT_MAP_FILE="${THOTH_HOME_DIR}/intent_map.json"
+  PROXY_API_KEY_FILE="${THOTH_HOME_DIR}/proxy_api_key.json"
+
+  mkdir -p "${THOTH_HOME_DIR}"
+  chmod 700 "${THOTH_HOME_DIR}" 2>/dev/null || true
+
+  if [ ! -f "${INTENT_MAP_FILE}" ]; then
+    printf '{}\n' > "${INTENT_MAP_FILE}"
+    echo "created ${INTENT_MAP_FILE}"
+  fi
+
+  if [ ! -f "${PROXY_API_KEY_FILE}" ]; then
+    KEY_ID="${THOTH_API_KEY_ID:-${HOSTNAME:-}}"
+    if [ -z "${KEY_ID}" ]; then
+      KEY_ID="$(hostname 2>/dev/null || true)"
+    fi
+    if [ -z "${KEY_ID}" ]; then
+      KEY_ID="unknown-host"
+    fi
+
+    printf '{\n  "api_key": "",\n  "key_id": "%s"\n}\n' "${KEY_ID}" > "${PROXY_API_KEY_FILE}"
+    chmod 600 "${PROXY_API_KEY_FILE}" 2>/dev/null || true
+    echo "created ${PROXY_API_KEY_FILE}"
+  fi
+}
+
 OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
 ARCH="$(uname -m)"
 
@@ -65,6 +98,19 @@ echo "Verifying checksum..."
   fi
 )
 
+# Guard against a known bad release state where Linux assets are dynamically
+# linked against musl (interpreter /lib/ld-musl-*.so.1), which fails on most
+# Ubuntu hosts with "No such file or directory".
+if [ "${OS}" = "linux" ] && command -v readelf >/dev/null 2>&1; then
+  INTERP_LINE="$(readelf -l "${TMP_DIR}/thoth" 2>/dev/null | grep "Requesting program interpreter" || true)"
+  if echo "${INTERP_LINE}" | grep -q "/lib/ld-musl"; then
+    echo "Downloaded artifact requires musl loader but this host likely lacks it:" >&2
+    echo "  ${INTERP_LINE}" >&2
+    echo "Expected a statically linked Linux artifact. Please retry after the release is republished." >&2
+    exit 1
+  fi
+fi
+
 mkdir -p "${INSTALL_DIR}"
 chmod +x "${TMP_DIR}/thoth"
 
@@ -75,5 +121,6 @@ else
 fi
 
 echo "thoth installed to ${INSTALL_DIR}/thoth"
+bootstrap_thoth_home
 "${INSTALL_DIR}/thoth" --version
 echo "Run 'thoth doctor' to verify your environment."
