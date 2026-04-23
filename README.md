@@ -1,7 +1,8 @@
 # thoth
 
-Thoth MCP governance proxy endpoint security sidecar.
-Governs MCP tool calls through the Moses enforcement pipeline.
+Thoth MCP governance runtime + headless control-plane CLI.
+Governs MCP tool calls through the Moses enforcement pipeline and supports
+GitOps-first tenant bootstrap via `thothctl`.
 
 ## Install
 
@@ -17,6 +18,14 @@ Download from Releases: https://github.com/atensecurity/thoth/releases/latest
 ## Documentation
 
 https://docs.atensecurity.com
+
+## Quick verify
+
+```bash
+thoth --version
+thothctl --version
+thoth doctor
+```
 
 ## Support
 
