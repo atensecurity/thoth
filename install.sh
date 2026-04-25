@@ -6,12 +6,19 @@ INSTALL_DIR="${THOTH_INSTALL_DIR:-/usr/local/bin}"
 VERSION="${THOTH_VERSION:-latest}"
 
 bootstrap_thoth_home() {
-  if [ -z "${HOME:-}" ]; then
-    echo "warning: HOME is not set; skipping ~/.thoth bootstrap" >&2
+  if [ -n "${THOTH_HOME_DIR:-}" ]; then
+    THOTH_HOME_DIR="${THOTH_HOME_DIR}"
+  elif [ -n "${HOME:-}" ]; then
+    THOTH_HOME_DIR="${HOME}/.thoth"
+  elif [ -n "${USERPROFILE:-}" ]; then
+    THOTH_HOME_DIR="${USERPROFILE}/.thoth"
+  elif [ -n "${HOMEDRIVE:-}" ] && [ -n "${HOMEPATH:-}" ]; then
+    THOTH_HOME_DIR="${HOMEDRIVE}${HOMEPATH}/.thoth"
+  else
+    echo "warning: could not resolve a home directory; skipping ~/.thoth bootstrap" >&2
     return 0
   fi
 
-  THOTH_HOME_DIR="${THOTH_HOME_DIR:-${HOME}/.thoth}"
   INTENT_MAP_FILE="${THOTH_HOME_DIR}/intent_map.json"
   PROXY_API_KEY_FILE="${THOTH_HOME_DIR}/proxy_api_key.json"
 
