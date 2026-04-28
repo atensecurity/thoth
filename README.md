@@ -27,6 +27,17 @@ thothctl --version
 thoth doctor
 ```
 
+## Read The Manuals After Install
+
+After installing a new release, read manuals directly in terminal:
+
+```bash
+thoth manual
+thothctl manual
+```
+
+Add these manual outputs to your internal runbooks before rollout.
+
 ## Support
 
 support@atensecurity.com
