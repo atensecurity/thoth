@@ -2,6 +2,13 @@
 
 All notable changes to `thoth` and `thothctl` are documented in this file.
 
+## 0.3.3 - 2026-05-10
+
+### Changed
+
+- Promoted the Thoth binary line to `v0.3.3` for proxy/CLI release packaging.
+- Updated public documentation references to the current stable binary line.
+
 ## 0.3.2 - 2026-05-10
 
 ### Added
