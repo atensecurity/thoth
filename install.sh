@@ -7,7 +7,7 @@ VERSION="${THOTH_VERSION:-latest}"
 
 bootstrap_thoth_home() {
 	if [ -n "${THOTH_HOME_DIR:-}" ]; then
-		THOTH_HOME_DIR="${THOTH_HOME_DIR}"
+		:
 	elif [ -n "${HOME:-}" ]; then
 		THOTH_HOME_DIR="${HOME}/.thoth"
 	elif [ -n "${USERPROFILE:-}" ]; then
