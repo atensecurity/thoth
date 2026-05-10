@@ -2,6 +2,20 @@
 
 All notable changes to `thoth` and `thothctl` are documented in this file.
 
+## 0.3.2 - 2026-05-10
+
+### Added
+
+- `thothctl billing artifacts` command for AIRS monthly report artifact access:
+  - list recent monthly artifact rows with downloadable PDF/CSV links
+  - fetch a specific month via `--year` + `--month`
+  - optional JSON file output via `--output`
+
+### Changed
+
+- Updated `thothctl` manual pages to document AIRS report artifact workflows
+  and command examples.
+
 ## 0.3.1 - 2026-05-09
 
 ### Changed
