@@ -2,6 +2,16 @@
 
 All notable changes to `thoth` and `thothctl` are documented in this file.
 
+## 0.3.4 - 2026-05-22
+
+### Fixed
+
+- Corrected local preflight scope handling so `thoth` only enforces tool-name scopes,
+  while ignoring non-tool permission scopes (for example `endpoint:checkin`) during
+  tool matching.
+- Added regression coverage for `tool_call:`-prefixed scope entries to prevent false
+  denials in Claude Desktop `filesystem-safe` sessions.
+
 ## 0.3.3 - 2026-05-10
 
 ### Changed
