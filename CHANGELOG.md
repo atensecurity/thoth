@@ -2,6 +2,18 @@
 
 All notable changes to `thoth` and `thothctl` are documented in this file.
 
+## 0.3.5 - 2026-06-10
+
+### Added
+
+- Added MCP vendor registry and catalog verification command surfaces in `thothctl`
+  to align CLI capability with current control-plane governance APIs.
+
+### Changed
+
+- Updated release automation and public distribution flow for `thoth` and `thothctl`
+  so production release tags drive Homebrew package publication from signed assets.
+
 ## 0.3.4 - 2026-05-22
 
 ### Fixed

@@ -25,6 +25,11 @@ Download from Releases: https://github.com/atensecurity/thoth/releases/latest
 ## Enterprise deployment notes
 
 - macOS release artifacts ship as universal binaries for `thoth` and `thothctl`.
+- When Apple Developer ID signing secrets are configured in release automation, the pipeline
+  publishes:
+  - signed binaries
+  - a notarized installer package (`thoth-macos-universal.pkg`)
+  - signing metadata (`signing-metadata.json`) for policy teams
 - Use publisher/trust-based rules in Santa/Jamf/Intune where possible. Keep SHA256
   allowlisting as a fallback control for emergency pinning.
 
