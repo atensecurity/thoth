@@ -6,17 +6,36 @@ GitOps-first tenant bootstrap via `thothctl`.
 
 ## Install
 
-**macOS / Linux**
-
-```bash
-curl -fsSL https://install.atensecurity.com/thoth | sh
-```
-
 **macOS (Homebrew)**
 
 ```bash
-brew tap atensecurity/homebrew-tap
+brew tap atensecurity/tap
 brew install thoth
+thoth --version
+thothctl --version
+```
+
+**macOS (Notarized PKG)**
+
+```bash
+curl -LO https://github.com/atensecurity/thoth/releases/download/v<VERSION>/thoth-macos-universal.pkg
+sudo installer -pkg thoth-macos-universal.pkg -target /
+/usr/local/bin/thoth --version
+/usr/local/bin/thothctl --version
+```
+
+**macOS package verification (recommended)**
+
+```bash
+pkgutil --check-signature thoth-macos-universal.pkg
+spctl --assess --type install --verbose=4 thoth-macos-universal.pkg
+xcrun stapler validate thoth-macos-universal.pkg
+```
+
+**Linux**
+
+```bash
+curl -fsSL https://install.atensecurity.com/thoth | sh
 ```
 
 **Windows**
