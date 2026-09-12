@@ -6,6 +6,11 @@ GitOps-first tenant bootstrap via `thothctl`.
 
 ## Install
 
+v0.3.7 is the latest release for the macOS runtime, including `thoth` and
+`thothctl` for Apple Silicon and Intel. Linux and Windows remain at v0.3.6;
+use the explicit version below because the global latest release contains
+macOS assets only.
+
 **macOS (Homebrew)**
 
 ```bash
@@ -35,11 +40,11 @@ xcrun stapler validate thoth-macos-universal.pkg
 **Linux**
 
 ```bash
-curl -fsSL https://install.atensecurity.com/thoth | sh
+curl -fsSL https://install.atensecurity.com/thoth | THOTH_VERSION=0.3.6 sh
 ```
 
 **Windows**
-Download from Releases: https://github.com/atensecurity/thoth/releases/latest
+Download v0.3.6: https://github.com/atensecurity/thoth/releases/tag/v0.3.6
 
 ## Enterprise deployment notes
 
