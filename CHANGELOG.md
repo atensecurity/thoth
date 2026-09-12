@@ -2,6 +2,68 @@
 
 All notable changes to `thoth` and `thothctl` are documented in this file.
 
+## 0.3.7 - 2026-09-12
+
+Stable release of the macOS runtime (`thoth` and `thothctl`) for Apple Silicon
+and Intel. This is the global latest release; Linux and Windows artifacts are
+not included and remain at v0.3.6. This client release does not change the
+platform readiness status.
+
+### Security
+
+- Updated the HTTP/2 stack from `h2` 0.4.13 in v0.3.6 to 0.4.19, fixing
+  RUSTSEC-2026-0258 (unbounded queuing of empty DATA frames through `hyper`).
+  The advisory is patched in h2 0.4.16 and later.
+
+### Added
+
+- Carried an action attestation ID through every governed tool call. The proxy
+  reuses `action_attestation_id` from the request when supplied and otherwise
+  generates one, sends it to the enforcer, and reports it on decision responses
+  and on both the request and terminal telemetry events, so an attempt can be
+  correlated end to end.
+- Reported decision evidence on `ALLOW` and `BLOCK` responses, which previously
+  carried none. `BLOCK`, `DEFER` and `STEP_UP` responses now include the
+  enforcement trace ID, action attestation ID, authorization decision, reason,
+  reason code, action classification and risk score when the enforcer supplies
+  them.
+
+### Fixed
+
+- Stopped writing enforcer error response bodies and selected response headers
+  into proxy logs when a call fails. A failure is now recorded as a reason code
+  (`enforcer_transport_error`, `enforcer_http_error`, `enforcer_invalid_response`)
+  with the HTTP status only, so response content cannot reach logs.
+- Distinguished an enforcer response with no recognized decision from a genuine
+  `BLOCK`. Both still fail closed, but the former is now recorded as
+  `enforcer_invalid_response` rather than being indistinguishable from a policy
+  denial in evidence.
+- Preserved request-side correlation IDs on the terminal event when the enforcer
+  is unreachable, returns an error status, or returns an undecodable body, so a
+  failed call is still traceable to the attempt that caused it.
+- Kept a locally escalated `STEP_UP` from exporting a receipt that the
+  underlying `ALLOW` never carried.
+- Distinguished an absent model risk score from one the enforcer explicitly
+  reported as null, and stopped copying non-numeric risk payloads into decision
+  evidence.
+- Cleared stale request-side reason fields from terminal telemetry so a decision
+  reason always describes that decision.
+
+### Known limitations
+
+- On Windows the proxy API key file (`~/.thoth/proxy_api_key.json`) is written
+  with inherited ACLs. The owner-only permission handling that `thothctl`
+  applies on macOS and Linux has no Windows equivalent yet, so treat that file
+  as readable by any account with access to the user profile until it does.
+
+### Changed
+
+- Serialized the decision-evidence integration fixtures. Each spawns a proxy
+  subprocess and a mock enforcer, and running them concurrently exhausted the
+  proxy's bounded 5s HTTP timeout, so the proxy failed closed and the suite
+  reported six failures unrelated to proxy behavior.
+
+
 ## 0.3.7-rc1 - 2026-09-11
 
 Release candidate. Not a production release and not published to the stable
