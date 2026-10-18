@@ -6,7 +6,7 @@ GitOps-first tenant bootstrap via `thothctl`.
 
 ## Install
 
-v0.3.7 is the latest release for the macOS runtime, including `thoth` and
+v0.3.8 is the latest release for the macOS runtime, including `thoth` and
 `thothctl` for Apple Silicon and Intel. Linux and Windows remain at v0.3.6;
 use the explicit version below because the global latest release contains
 macOS assets only.
