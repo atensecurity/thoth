@@ -2,54 +2,6 @@
 
 All notable changes to `thoth` and `thothctl` are documented in this file.
 
-## Unreleased
-
-### Fixed
-
-- `thothctl auth login` works for trial and self-serve workspaces with no options: sign in in the
-  browser, and GovAPI finds your workspace from the organization you signed in to. The workspace
-  is saved to `~/.thoth/current-workspace.json`, so later commands no longer need `--tenant-id`.
-  A 32-character workspace ID still works and selects the shared GovAPI host. GovAPI finds the
-  WorkOS organization from the workspace instead of the email domain, and the admin check uses
-  the workspace role GovAPI reports.
-
-## 0.3.8 - 2026-10-19
-
-Release of the macOS runtime (`thoth` and `thothctl`) for Apple Silicon and
-Intel. This is the global latest release; Linux and Windows artifacts are not
-included and remain at v0.3.6.
-
-### Added
-
-- `thothctl mcp config` generates client configuration for the tenant's Thoth
-  configuration MCP endpoint, including Claude Code and Cursor. OAuth is the
-  default; API-key configuration references an environment variable without
-  embedding the credential.
-
-- `thothctl tools list` shows tools discovered from your agents with their
-  proposed effect classes, and `thothctl tools confirm` records an admin's
-  confirmed classes. Only confirmed classes change decisions. `thoth tools`
-  forwards to the same commands.
-- `thothctl init --agent-id AGENT --profile PROFILE` gives an agent a governance
-  profile (`safe-default`, `coding-agent`, `finance-operations` or
-  `customer-support`), pinned at `--profile-version` (default `1.0.0`).
-- The MCP proxy reports the tools an MCP server lists, including its
-  `readOnlyHint`, `destructiveHint` and `openWorldHint` annotations, as
-  advisory proposals. Annotations are claims made by the server, never
-  authority.
-
-### Privacy
-
-- The proxy removes schema `default`, `example`, `examples`, `const` and `enum`
-  values before reporting tools, keeps parameters with those names, and
-  percent-encodes the tenant ID. Set `THOTH_TOOL_INVENTORY=off` to disable
-  reporting.
-
-### Changed
-
-- Added internal broker execution plumbing that is not enabled in this
-  release and changes no runtime behaviour.
-
 ## 0.3.7 - 2026-09-12
 
 Stable release of the macOS runtime (`thoth` and `thothctl`) for Apple Silicon
