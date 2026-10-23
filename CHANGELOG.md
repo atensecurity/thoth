@@ -2,6 +2,20 @@
 
 All notable changes to `thoth` and `thothctl` are documented in this file.
 
+## 0.3.10 - 2026-10-23
+
+Release of the macOS runtime (`thoth` and `thothctl`) for Apple Silicon and
+Intel. Linux and Windows artifacts are not included and remain at v0.3.6.
+
+### Fixed
+
+- Commands that need a recent second factor, such as `thothctl api-keys create`, no longer fail
+  with HTTP 403 for signed-in sessions. The command prints and opens a confirmation link; you
+  confirm in the browser with your authenticator, and it continues. That session can then run
+  such commands for 15 minutes without asking again (the proof is kept in
+  `~/.thoth/step-up.json`, readable only by you, and works only with that session). Needs a
+  GovAPI with browser step-up for the CLI.
+
 ## 0.3.9 - 2026-10-23
 
 Release of the macOS runtime (`thoth` and `thothctl`) for Apple Silicon and
