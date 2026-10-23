@@ -2,22 +2,30 @@
 
 All notable changes to `thoth` and `thothctl` are documented in this file.
 
-## Unreleased
+## 0.3.9 - 2026-10-23
+
+Release of the macOS runtime (`thoth` and `thothctl`) for Apple Silicon and
+Intel. Linux and Windows artifacts are not included and remain at v0.3.6.
+
+### Changed
+
+- Trial and self-serve workspaces use `https://api.atensecurity.com` as their GovAPI by default.
+  `https://govapi.trial.atensecurity.com` reaches the same service, and sessions saved for it keep
+  working.
+- `thothctl mcp config --trial` points clients at `https://mcp.atensecurity.com/<tenant>`, the
+  dedicated MCP host. `https://govapi.trial.atensecurity.com/thoth/mcp/<tenant>` keeps working.
 
 ### Fixed
 
-- `thothctl auth login` works for trial and self-serve workspaces with no options: sign in in the
-  browser, and GovAPI finds your workspace from the organization you signed in to. The workspace
-  is saved to `~/.thoth/current-workspace.json`, so later commands no longer need `--tenant-id`.
-  A 32-character workspace ID still works and selects the shared GovAPI host. GovAPI finds the
-  WorkOS organization from the workspace instead of the email domain, and the admin check uses
-  the workspace role GovAPI reports.
+- A `thothctl auth login` session no longer stops working after about five minutes. The saved
+  session now includes a refresh token, and commands renew the access token through GovAPI shortly
+  before it expires. Each renewal re-checks the workspace membership and admin role. Sessions
+  saved by 0.3.8 need one new login.
 
 ## 0.3.8 - 2026-10-19
 
 Release of the macOS runtime (`thoth` and `thothctl`) for Apple Silicon and
-Intel. This is the global latest release; Linux and Windows artifacts are not
-included and remain at v0.3.6.
+Intel. Linux and Windows artifacts are not included and remain at v0.3.6.
 
 ### Added
 
@@ -37,6 +45,15 @@ included and remain at v0.3.6.
   `readOnlyHint`, `destructiveHint` and `openWorldHint` annotations, as
   advisory proposals. Annotations are claims made by the server, never
   authority.
+
+### Fixed
+
+- `thothctl auth login` works for trial and self-serve workspaces with no options: sign in in the
+  browser, and GovAPI finds your workspace from the organization you signed in to. The workspace
+  is saved to `~/.thoth/current-workspace.json`, so later commands no longer need `--tenant-id`.
+  A 32-character workspace ID still works and selects the shared GovAPI host. GovAPI finds the
+  WorkOS organization from the workspace instead of the email domain, and the admin check uses
+  the workspace role GovAPI reports.
 
 ### Privacy
 
