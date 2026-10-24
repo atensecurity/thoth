@@ -2,6 +2,24 @@
 
 All notable changes to `thoth` and `thothctl` are documented in this file.
 
+## 0.3.11 - 2026-10-24
+
+Release of the macOS runtime (`thoth` and `thothctl`) for Apple Silicon and
+Intel. Linux and Windows artifacts are not included and remain at v0.3.6.
+
+### Added
+
+- `thothctl settings data-handling get` shows what Thoth keeps of tool arguments, prompts and
+  tool output for the workspace, and `thothctl settings data-handling set --tool-arguments
+  store|hash|redact|drop --prompts store|hash|drop` changes it. Changing it needs an admin with a
+  recent second factor, which a signed-in session confirms in the browser. The default is hashed
+  arguments and no prompts.
+- `thothctl decisions list` lists recorded enforcement decisions newest first, filtered by
+  `--outcome`, `--agent-id`, `--tool`, `--reason-code`, `--rule-id`, `--since` and `--until`,
+  with `--cursor` for the next page. `thothctl decisions export` downloads the same selection as
+  CSV (at most 5,000 decisions; it says when more matched). Export needs an admin and, during a
+  trial, a paid plan.
+
 ## 0.3.10 - 2026-10-23
 
 Release of the macOS runtime (`thoth` and `thothctl`) for Apple Silicon and
