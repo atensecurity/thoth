@@ -2,28 +2,6 @@
 
 All notable changes to `thoth` and `thothctl` are documented in this file.
 
-## 0.3.12 - 2026-10-24
-
-Release of the macOS runtime (`thoth` and `thothctl`) for Apple Silicon and
-Intel. Linux and Windows artifacts are not included and remain at v0.3.6.
-
-### Added
-
-- `thothctl settings decision-stream get` shows which decisions Thoth sends to your SIEM and how
-  delivery is going (last delivered, last failure, failures in the last 24 hours), and
-  `thothctl settings decision-stream set --enabled true|false --decisions non_allow|all
-  --allow-sample-rate <0-1>` changes it. Turning it on needs a SIEM destination and an admin with a
-  recent second factor.
-- `thothctl tools confirm` takes `--target-sensitivity public|internal|confidential|restricted` and
-  `--acting-privilege standard|elevated|admin`, sent to your SIEM with each decision for the tool.
-  Confirming a tool again without them keeps what was declared.
-- `thothctl reports download <report-id> [--format pdf|csv] [--output FILE]` saves a completed
-  runtime security report. Downloading is on paid plans, and in the read-only window after a trial
-  ends.
-- `thothctl agents mode get|set --agent-id <id> [--mode observe|enforce] [--high-risk hold|deny]`
-  shows or changes an agent's mode, and `thothctl agents observe-summary --agent-id <id> [--days N]`
-  shows what enforcing would have denied or held for an agent in observe.
-
 ## 0.3.11 - 2026-10-24
 
 Release of the macOS runtime (`thoth` and `thothctl`) for Apple Silicon and
