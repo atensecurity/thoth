@@ -2,6 +2,79 @@
 
 All notable changes to `thoth` and `thothctl` are documented in this file.
 
+## 0.3.13 - 2026-10-28
+
+Release of the macOS runtime (`thoth` and `thothctl`) for Apple Silicon and
+Intel. Linux and Windows artifacts are not included and remain at v0.3.6.
+Built with Rust 1.99.1. Versions 0.3.13 to 0.3.16 were prepared in the
+repository on 25 October but never published; this release contains all of
+them. Some commands need the server from production v0.6.13 or later
+(deployed 28 October 2026).
+
+### Added
+
+- **Policy rules.** `thothctl governance policies list|create|update|toggle|promote|decide|delete`
+  manages policy rules in dev or prod. A rule created by someone who is not an org admin stays
+  pending until an org admin approves it with `decide`; `delete` needs `--confirm`.
+  `thothctl governance policies simulate --environment dev|prod --tool <name> --agent-id <agent>
+  [--params JSON]` shows what Thoth would decide for one tool call, and which rules matched,
+  without running it. A simulation changes nothing: no hold, approval request, quarantine,
+  notification or record. `--agent-id` is required on self-serve and trial workspaces.
+- **Exceptions.** `thothctl exceptions list|get|create|review`: request a policy exception for a
+  blocked action (`--violation-id`, `--justification`, `--frequency`, `--data-sensitivity`), and
+  review requests (`--decision approve|deny|request_changes|approve_with_modification`, with
+  `--policy-change-file` for a modification). `thothctl exceptions artifacts list|get|apply`
+  applies an approved exception's policy change as a policy bundle (`--format rego|cedar`,
+  `--mode enforce|observe`) and ends its temporary override; the same policy is never applied
+  twice, and applying needs a plan with policy bundles.
+- **Held actions.** `thothctl approvals get --approval-id <id>` shows one held action, and
+  `thothctl approvals resolve --approval-id <id> --decision approve|deny [--note TEXT]` approves or
+  denies it. Repeating the same decision is harmless and a conflicting one is refused.
+- **Agents and endpoints.** `thothctl agents quarantine set|lift --agent-id <id>` quarantines an
+  agent or lifts the quarantine. `thothctl agents discovered list|promote|block|unblock` acts on
+  agents Thoth has seen calling without a registration (`block` needs `--confirm`).
+  `thothctl kill-switch [--env dev|staging|prod] --confirm` quarantines every registered agent and
+  active endpoint and stops running sessions; `thothctl endpoints quarantine set|lift
+  --endpoint-id <id>` is the way back. `thothctl fleets
+  list|get|create|update|delete|deploy|pause|rollback` manages fleets (`delete` and `rollback` need
+  `--confirm`), and `thothctl endpoints set-mode --endpoint-id <id> --mode enforce|observe|off`
+  sets one or more endpoints' mode.
+- **Tools.** `thothctl tools confirm --agent-id <id>` declares a tool for one agent; without it the
+  declaration covers every agent.
+- **People and sign-in.** `thothctl team` manages people as a signed-in admin: on self-serve and
+  trial workspaces `team members list|remove|set-role`, `team invitations list|create|revoke` and
+  `team requests list|approve|deny`; on dedicated workspaces `team org-members
+  list|invite|remove|set-role`. Neither removes yourself or the last admin.
+  `thothctl settings security get|set|remove` manages sign-in security (`--require-mfa`,
+  `--session-timeout-minutes`, `--ip-allowlist`); `get` shows the address Thoth sees you
+  connecting from, which an allowlist must include. `thothctl auth step-up` confirms a second
+  factor in the browser ahead of time; the proof lasts about 15 minutes and is shared with the
+  Terraform provider's `use_thothctl_session`.
+- **Slack.** `thothctl slack status|channels|set-channel` and `thothctl slack reviewers
+  list|candidates|set` choose the approvals channel and who approves (API keys cannot appoint
+  reviewers). `thothctl support status|create|invite|resend` manages the Slack Connect support
+  channel with Aten as a signed-in organization admin; writes need `--confirm` and send an
+  idempotency key you can reuse with `--idempotency-key` to retry safely.
+- **Settings.** `thothctl settings set` changes the shadow-agent policy, the webhook, the SIEM
+  destination and PAM. Only the flags given change; secrets are read from files (`-` for stdin),
+  never from arguments.
+- **Reports and billing.** `thothctl reports generate [--start] [--end] [--wait]` generates a
+  report (in the background unless `--wait`), and `thothctl reports compliance-risk [--from] [--to]
+  [--scenarios-file]` reads compliance risk, with your own monetary scenarios reported separately
+  and never totalled. `thothctl billing statements list|download <YYYY-MM>` gets a paid
+  workspace's month-end statements.
+- **Model artifacts.** `thothctl model-artifacts list|get|register|verify-provenance|screen|waive|activate`
+  takes an artifact through Thoth's activation gate, as the `thoth_model_artifact` Terraform
+  resource does. `waive` and `activate` need `--confirm`.
+
+### Changed
+
+- `thothctl reports list` prints a table (report ID, cadence, status, generated, period, denials);
+  `--json` keeps the full snapshots.
+- `thothctl agents observe-summary` names modified and deferred actions only when there are any.
+- Tables print booleans as yes or no, and numbers, instead of `-`.
+- `thothctl manual` and `thoth manual` print a reference generated from the commands themselves.
+
 ## 0.3.12 - 2026-10-24
 
 Release of the macOS runtime (`thoth` and `thothctl`) for Apple Silicon and
