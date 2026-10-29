@@ -2,40 +2,6 @@
 
 All notable changes to `thoth` and `thothctl` are documented in this file.
 
-## 0.3.14 - 2026-10-29
-
-Release of the macOS runtime (`thoth` and `thothctl`) for Apple Silicon and
-Intel, and of the Linux runtime for x86_64 and arm64, the first Linux release
-since v0.3.6 (`install.sh` installs it). Windows artifacts are not included and
-remain at v0.3.6.
-Evidence pack commands need the server from production v0.6.18 or later
-(deployed 29 October 2026); session isolation needs v0.6.14 or later.
-
-### Added
-
-- **Evidence packs.** `thothctl evidence pack build [--period-start RFC3339 --period-end RFC3339]`
-  builds a signed evidence pack for a period of up to 31 days (the previous calendar month by
-  default), in the background; `thothctl evidence pack list` shows its status; `thothctl evidence
-  pack download --pack-id <id> [--output-dir DIR]` saves every part (paid plans, or a trial's
-  read-only retention window), fetching each from its short-lived link without sending your Thoth
-  credential to storage.
-- **Offline verification.** `thothctl evidence verify --pack <part>...` checks every part of a pack
-  with no network access: the part sequence and file digests, each manifest's signature, every
-  decision's attestation and receipt signature over the exact bytes it covers, the event chain's
-  hashes, signatures and continuity, links and counts. A key is trusted only for its published
-  purpose, from the list built into `thothctl`, or from `--trusted-key PURPOSE=SHA256` (repeatable)
-  instead. The summary says what verification shows and what it does not (that every agent action
-  reached Thoth, or that any control or requirement is met). `--json` gives a machine-readable
-  result.
-- **Published signing keys.** `thothctl evidence trusted-keys [--json]` prints the decision-receipt
-  and evidence-pack key fingerprints built into this release, as published at
-  https://docs.atensecurity.com/signing-keys.json.
-- **Session isolation.** `thothctl investigate isolate --session-id <id> [--quarantine-agent]
-  --confirm` makes Thoth deny every action in one session until it is released, while the agent's
-  other sessions continue; `--quarantine-agent` also quarantines the agent.
-  `thothctl investigate release --session-id <id> --confirm` releases it and restores the session's
-  earlier status; an agent quarantine stays until lifted with `thothctl agents quarantine lift`.
-
 ## 0.3.13 - 2026-10-28
 
 Release of the macOS runtime (`thoth` and `thothctl`) for Apple Silicon and
