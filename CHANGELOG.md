@@ -2,45 +2,6 @@
 
 All notable changes to `thoth` and `thothctl` are documented in this file.
 
-## 0.3.16 - 2026-11-07
-
-Release of the macOS runtime (`thoth` and `thothctl`) for Apple Silicon and
-Intel, and of the Linux runtime for x86_64 and arm64 (`install.sh` installs it).
-Windows artifacts are not included and remain at v0.3.6.
-`thoth update` and `thothctl update` now verify a signature before they install, so this is
-the release to update to first: versions up to 0.3.15 update to it as before, and from 0.3.16 on
-every update is verified.
-
-### Security
-
-- `thoth update` and `thothctl update` now require a detached Ed25519 signature of
-  `checksums.sha256` (`checksums.sha256.ed25519`, published with each release) and verify it
-  against public keys compiled into the binary before they trust the checksums or install.
-  Before, the expected hash came from the same release as the binary, so anyone who could replace
-  release assets could replace both. A missing, invalid or unknown-key signature refuses the
-  install, and there is no flag to skip the check.
-- The signature covers the release version as well as the checksums, and self-update installs
-  only a version strictly newer than the one running, with or without `--force`. An older signed
-  release cannot be replayed to roll a binary back, and the same version is not reinstalled.
-- Links the server supplies (the sign-in and step-up approval URLs) are validated before
-  `thothctl` opens them: https only (http only for loopback), no credentials, whitespace, control
-  characters or quotes, and a host that is loopback, an `atensecurity.com` or `authkit.app`
-  domain, or shares a domain with the configured API host. Otherwise the link is not opened, a
-  warning is printed, and the URL, which is already printed, can be opened by hand. The browser
-  is now opened without a shell: Windows no longer goes through `cmd /C start`, which could run a
-  command from a crafted URL and truncated legitimate links holding `&`.
-- The MCP proxy takes the context the enforcer judges a call by (purpose, identity, auth and
-  delegation context, model and cost, original request, data classification, action attestation
-  id) from the call's own parameters and the operator's configuration, never from the tool
-  arguments, which the model chooses. A model could otherwise declare its own purpose, role or
-  a lower data classification. Arguments can still raise a call's sensitivity but never lower it.
-
-### Changed
-
-- `thoth update --force` and `thothctl update --force` no longer reinstall the current version or
-  an older one: an update installs only a strictly newer release whose signature verifies. The
-  flag is still accepted, so existing scripts do not break, prints a note and does nothing.
-
 ## 0.3.15 - 2026-11-05
 
 Release of the macOS runtime (`thoth` and `thothctl`) for Apple Silicon and
